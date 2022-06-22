@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gofoods/custtomscreens/customtextField.dart';
 import 'package:gofoods/custtomscreens/custtombutton.dart';
 import 'package:gofoods/custtomscreens/textfild.dart';
+import 'package:gofoods/model/input/signupinput.dart';
 import 'package:gofoods/screens/authscreen/createaccount.dart';
 import 'package:gofoods/screens/authscreen/forgotpassword.dart';
 import 'package:gofoods/screens/authscreen/otp.dart';
+import 'package:gofoods/screens/enablelocation.dart';
+import 'package:gofoods/services/auth.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -21,6 +26,11 @@ class _PhoneNumberState extends State<PhoneNumber> {
   late ColorNotifier notifier;
   String? _selectedindex;
   bool isChecked = false;
+
+  final _formKey = GlobalKey<FormState>();
+  AuthService auth = AuthService();
+  final SignUpInput _signUpInput = SignUpInput();
+
   final List<Map> _myjson = [
     {
       'id': '2',
@@ -53,6 +63,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -60,225 +71,284 @@ class _PhoneNumberState extends State<PhoneNumber> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getbgcolor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Image.asset("assets/signin.jpg"),
-                Column(
-                  children: [
-                    SizedBox(height: height / 12),
-                    Row(
-                      children: [
-                        SizedBox(width: width / 20),
-                        Text(
-                          LanguageEn.signin,
-                          style: TextStyle(
-                            color: notifier.getblackcolor,
-                            fontSize: height / 25,
-                            fontFamily: 'GilroyBold',
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height / 80),
-                    Row(
-                      children: [
-                        SizedBox(width: width / 20),
-                        Text(
-                          LanguageEn.welcometogofoods,
-                          style: TextStyle(
-                            color: notifier.getblackcolor,
-                            fontSize: height / 42,
-                            fontFamily: 'GilroyMedium',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-            // SizedBox(height: height / 7),
-            // Row(
-            //   children: [
-            //     SizedBox(width: width / 20),
-            //     Text(
-            //       LanguageEn.enteryourphonenumber,
-            //       style: TextStyle(
-            //         color: notifier.getblackcolor,
-            //         fontSize: height / 33,
-            //         fontFamily: 'GilroyBold',
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(height: height / 100),
-            // Row(
-            //   children: [
-            //     SizedBox(width: width / 20),
-            //     Text(
-            //       LanguageEn.pleaseenterphonenumber,
-            //       style: TextStyle(
-            //         color: notifier.getgrey,
-            //         fontSize: height / 47,
-            //         fontFamily: 'GilroyMedium',
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            SizedBox(height: height / 40),
-            Row(
-              children: [
-                SizedBox(width: width / 20),
-                Text(
-                  LanguageEn.phonenumber,
-                  style: TextStyle(
-                    color: notifier.getgrey,
-                    fontSize: height / 50,
-                    fontFamily: 'GilroyMedium',
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: height / 60),
-            mobailnotextfild(),
-            SizedBox(height: height / 40),
-            Row(
-              children: [
-                SizedBox(width: width / 20),
-                Text(
-                  LanguageEn.password,
-                  style: TextStyle(
-                    color: notifier.getgrey,
-                    fontSize: height / 50,
-                    fontFamily: 'GilroyMedium',
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: height / 50),
-            Customtextfild.textField(LanguageEn.enteryourpassword,
-                notifier.getblackcolor, width / 1.13, Icons.lock,notifier.getbgfildcolor),
-            Row(
-              children: [
-                SizedBox(width: width / 30),
-                Transform.scale(
-                  scale: 1,
-                  child: Checkbox(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    activeColor: notifier.getred,
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value!;
-                      });
-                    },
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          LanguageEn.remember,
-                          style: TextStyle(
-                              fontSize: height / 55, color: notifier.getgrey),
-                        ),
-                        SizedBox(width: width /4.9),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ForgotPassword(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            LanguageEn.forgotpassword,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Image.asset("assets/signin.jpg"),
+                  Column(
+                    children: [
+                      SizedBox(height: height / 12),
+                      Row(
+                        children: [
+                          SizedBox(width: width / 20),
+                          Text(
+                            LanguageEn.signin,
                             style: TextStyle(
-                              fontSize: height / 55,
-                              color: const Color(0xff3a71d5),
+                              color: notifier.getblackcolor,
+                              fontSize: height / 25,
+                              fontFamily: 'GilroyBold',
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: height / 13),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                authbutton(const Color(0xff3a71d5), Colors.white,
-                    LanguageEn.facebook, width / 2.3, "assets/facebook.png"),
-                SizedBox(width: width / 25),
-                authbutton(const Color(0xff323337),Colors.white,
-                    LanguageEn.apple, width / 2.3, "assets/apple.png")
-              ],
-            ),
-            SizedBox(height: height / 40),
-            GestureDetector(
-              onTap: () {
-                _showMyDialog();
-              },
-              child: button(
-                notifier.getred,
-                notifier.getwhite,
-                LanguageEn.signin,
-                width / 1.1,
+                        ],
+                      ),
+                      SizedBox(height: height / 80),
+                      Row(
+                        children: [
+                          SizedBox(width: width / 20),
+                          Text(
+                            LanguageEn.welcometogofoods,
+                            style: TextStyle(
+                              color: notifier.getblackcolor,
+                              fontSize: height / 42,
+                              fontFamily: 'GilroyMedium',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ),
-            SizedBox(height: height / 50),
-            GestureDetector(
-              onTap: () {
-                _faceshowMyDialog();
-              },
-              child: button(const Color(0xff323337), Colors.white,
-                  LanguageEn.signinwithfaceid, width / 1.1),
-            ),
-            SizedBox(height: height / 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  LanguageEn.donothaveaccount,
-                  style: TextStyle(
-                    color: notifier.getgrey,
-                    fontFamily: 'GilroyMedium',
-                    fontSize: height / 55,
+              // SizedBox(height: height / 7),
+              // Row(
+              //   children: [
+              //     SizedBox(width: width / 20),
+              //     Text(
+              //       LanguageEn.enteryourphonenumber,
+              //       style: TextStyle(
+              //         color: notifier.getblackcolor,
+              //         fontSize: height / 33,
+              //         fontFamily: 'GilroyBold',
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(height: height / 100),
+              // Row(
+              //   children: [
+              //     SizedBox(width: width / 20),
+              //     Text(
+              //       LanguageEn.pleaseenterphonenumber,
+              //       style: TextStyle(
+              //         color: notifier.getgrey,
+              //         fontSize: height / 47,
+              //         fontFamily: 'GilroyMedium',
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              SizedBox(height: height / 40),
+              Row(
+                children: [
+                  SizedBox(width: width / 20),
+                  Text(
+                    LanguageEn.phonenumber,
+                    style: TextStyle(
+                      color: notifier.getgrey,
+                      fontSize: height / 50,
+                      fontFamily: 'GilroyMedium',
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                ],
+              ),
+              SizedBox(height: height / 60),
+              // mobailnotextfild(),
+              // SizedBox(height: height / 50),
+              Customtextfield(
+                name: "Phone number",
+                hintText: LanguageEn.enteryourphonenumber,
+                textcolor: notifier.getblackcolor,
+                wi: width / 1.13,
+                icon: Icons.call,
+                fillcolor: notifier.getbgfildcolor,
+                onSave: (e) {
+                  _signUpInput.phoneNumber = e;
+                },
+                inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                inputType: TextInputType.phone,
+                validator: (e) {
+                  if (_signUpInput.phoneNumber!.length < 10) {
+                    return "Phone number contains 10-digit";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: height / 40),
+              Row(
+                children: [
+                  SizedBox(width: width / 20),
+                  Text(
+                    LanguageEn.password,
+                    style: TextStyle(
+                      color: notifier.getgrey,
+                      fontSize: height / 50,
+                      fontFamily: 'GilroyMedium',
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: height / 50),
+              // Customtextfild.textField(
+              //     LanguageEn.enteryourpassword,
+              //     notifier.getblackcolor,
+              //     width / 1.13,
+              //     Icons.lock,
+              //     notifier.getbgfildcolor),
+              Customtextfield(
+                name: "Password",
+                hintText: LanguageEn.enteryourpassword,
+                textcolor: notifier.getblackcolor,
+                wi: width / 1.13,
+                icon: Icons.lock,
+                fillcolor: notifier.getbgfildcolor,
+                validator: (e) {
+                  if (_signUpInput.password!.length < 8) {
+                    return "Password contain minimum 8 character";
+                  }
+                  return null;
+                },
+                onSave: (e) {
+                  _signUpInput.password = e;
+                },
+              ),
+              Row(
+                children: [
+                  SizedBox(width: width / 30),
+                  Transform.scale(
+                    scale: 1,
+                    child: Checkbox(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                      ),
+                      activeColor: notifier.getred,
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            LanguageEn.remember,
+                            style: TextStyle(
+                                fontSize: height / 55, color: notifier.getgrey),
+                          ),
+                          SizedBox(width: width / 4.9),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ForgotPassword(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              LanguageEn.forgotpassword,
+                              style: TextStyle(
+                                fontSize: height / 55,
+                                color: const Color(0xff3a71d5),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              // SizedBox(height: height / 13),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     authbutton(const Color(0xff3a71d5), Colors.white,
+              //         LanguageEn.facebook, width / 2.3, "assets/facebook.png"),
+              //     SizedBox(width: width / 25),
+              //     authbutton(const Color(0xff323337), Colors.white,
+              //         LanguageEn.apple, width / 2.3, "assets/apple.png")
+              //   ],
+              // ),
+              SizedBox(height: height / 40),
+              GestureDetector(
+                onTap: () async {
+                  // print("object");
+                  // _showMyDialog();
+                  _formKey.currentState?.save();
+                  final isValid = _formKey.currentState?.validate() ?? false;
+
+                  if (isValid) {
+                    // print(_signUpInput.toMap());
+                    await auth.signInRequest(_signUpInput);
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CreateAccount(),
+                        builder: (context) => const EnableLocation(),
                       ),
+                      (route) => false,
                     );
-                  },
-                  child: Text(
-                    LanguageEn.signup,
+                  }
+                },
+                child: button(
+                  notifier.getred,
+                  notifier.getwhite,
+                  LanguageEn.signin,
+                  width / 1.1,
+                ),
+              ),
+              // SizedBox(height: height / 50),
+              // GestureDetector(
+              //   onTap: () {
+              //     _faceshowMyDialog();
+              //   },
+              //   child: button(const Color(0xff323337), Colors.white,
+              //       LanguageEn.signinwithfaceid, width / 1.1),
+              // ),
+              SizedBox(height: height / 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    LanguageEn.donothaveaccount,
                     style: TextStyle(
-                      color: const Color(0xff3a71d5),
+                      color: notifier.getgrey,
                       fontFamily: 'GilroyMedium',
                       fontSize: height / 55,
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateAccount(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      LanguageEn.signup,
+                      style: TextStyle(
+                        color: const Color(0xff3a71d5),
+                        fontFamily: 'GilroyMedium',
+                        fontSize: height / 55,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -289,7 +359,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(backgroundColor: notifier.getwhite,
+        return AlertDialog(
+          backgroundColor: notifier.getwhite,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -382,7 +453,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
       useRootNavigator: true,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(backgroundColor: notifier.getwhite,
+        return AlertDialog(
+          backgroundColor: notifier.getwhite,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -488,9 +560,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
     return Container(
       height: height / 16,
       width: width / 1.1,
-      decoration:   BoxDecoration(
-        color:notifier.getbgfildcolor,
-
+      decoration: BoxDecoration(
+        color: notifier.getbgfildcolor,
         borderRadius: const BorderRadius.all(
           Radius.circular(13),
         ),

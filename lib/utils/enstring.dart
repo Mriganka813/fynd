@@ -15,15 +15,15 @@ class LanguageEn {
 
   static String get adresslinetwo => "Address Line 2";
 
-  static String get selects  => "Make default shipping address";
+  static String get selects => "Make default shipping address";
 
-  static String get deliveryadds   => "Address Update";
+  static String get deliveryadds => "Address Update";
 
-  static String get atul   => "Atul cake Shop";
+  static String get atul => "Atul cake Shop";
 
-  static String get sevenchess   => "Seven Chees";
+  static String get sevenchess => "Seven Chees";
 
-  static String get derryfresh   => "Derry Fresh";
+  static String get derryfresh => "Derry Fresh";
 
   static String get successorder => "Success Order";
 
@@ -247,6 +247,8 @@ class LanguageEn {
       "Please enter phone number\nto using Carr service";
 
   static String get loginwithphonenumber => "Login with phone number";
+
+  static String get signupwithphonenumber => "Signup with phone number";
 
   static String get history => "History";
 

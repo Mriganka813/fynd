@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:gofoods/utils/enstring.dart';
@@ -32,6 +31,7 @@ class _ProfileState extends State<Profile> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -58,54 +58,47 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(height: height / 20),
             GestureDetector(
-
               child: profiletype("assets/Bag.png", LanguageEn.myporder),
             ),
             SizedBox(height: height / 30),
             GestureDetector(
-
               child:
                   profiletype("assets/Setting.png", LanguageEn.profilesetting),
             ),
             SizedBox(height: height / 30),
             GestureDetector(
-
               child: profiletype(
                   "assets/Ticket.png", LanguageEn.discountsandpromocodes),
             ),
             SizedBox(height: height / 30),
             GestureDetector(
-
               child: profiletype(
                   "assets/Notification.png", LanguageEn.notifications),
             ),
             SizedBox(height: height / 30),
             GestureDetector(
-
                 child:
                     profiletype("assets/invite.png", LanguageEn.invitefriend)),
             SizedBox(height: height / 30),
             GestureDetector(
-
                 child: profiletype("assets/about.png", LanguageEn.aboutus)),
             SizedBox(height: height / 30),
             GestureDetector(
-
                 child: profiletype("assets/Paper.png", LanguageEn.faq)),
             SizedBox(height: height / 30),
             GestureDetector(
-
-                child: profiletype("assets/teams.png", LanguageEn.teamsandcontiotion)),
+                child: profiletype(
+                    "assets/teams.png", LanguageEn.teamsandcontiotion)),
             SizedBox(height: height / 30),
             GestureDetector(
-
                 child: profiletype("assets/Call.png", LanguageEn.helpcenter)),
             SizedBox(height: height / 30),
             darkmode(),
             SizedBox(height: height / 30),
             GestureDetector(
-
-
+              onTap: () {
+                print("object");
+              },
               child: profiletype("assets/Logout.png", LanguageEn.logout),
             ),
           ],
@@ -150,6 +143,7 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
   Widget darkmode() {
     return Container(
       color: Colors.transparent,
@@ -171,7 +165,6 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           const Spacer(),
-
           SizedBox(width: width / 13),
         ],
       ),

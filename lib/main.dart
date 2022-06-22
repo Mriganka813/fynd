@@ -1,10 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/onbonding/onbonding.dart';
+import 'package:gofoods/screens/splashscreen.dart';
+import 'package:gofoods/utils/global.dart';
+import 'package:gofoods/utils/locator.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/notifirecolor.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  locator.registerLazySingleton(() => GlobalServices());
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -19,9 +25,13 @@ class MyApp extends StatelessWidget {
           create: (_) => ColorNotifier(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Onbonding(),
+
+        navigatorKey: locator<GlobalServices>().navigatorKey,
+        // home: Onbonding(),
+        // home: PhoneNumber(),
+        home: SplashScreen(),
       ),
     );
   }

@@ -1,4 +1,4 @@
-package com.example.gofoods
+package com.magicstep.fynd
 
 import io.flutter.embedding.android.FlutterActivity
 
